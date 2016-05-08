@@ -18,8 +18,12 @@ class Logline(models.Model):
     timestamp=models.DateTimeField('Logs reporting time')
     pluin_app=models.ForeignKey(PluginApp, related_name='Logs')
     log_text=models.TextField()
-    level=models.CharField(max_length=50,
+    importance=models.CharField(max_length=50,
                            help_text=_T("Importance of the logline") )
+    slibling=models.ManyToManyField("self")
+    previous_logs=models.ManyToManyField("self", related_name="next")
+    next_logs=models.ManyToManyField("self", related_name="previous")
+
 
     @abc.abstractmethod
     def get_log_key(self):
@@ -32,3 +36,5 @@ class Logline(models.Model):
     @abc.abstractmethod
     def get_instance(self):
         pass
+
+
