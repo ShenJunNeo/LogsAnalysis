@@ -5,37 +5,20 @@ import abc
 
 # Create your models here.
 
-class Equipment(models.Model):
+    
+class LogEvents(models.Model):
+    flag=models.IntegerField()
     name=models.CharField(max_length=100)
-    address=models.CharField(max_length=100)
-    description=models.TextField()
+    duration=models.DurationField()
+    tempalte=models.TextField(default=None)
 
-class PluginApp(Equipment):
-    owner=models.ForeignKey(Equipment, related_name="app")
-
+class TestRun(LogEvents):
+    notes=models.TextField(default=None)
+    testrun_result=models.CharField(max_length=15,default="Failed")
+    testrun_case_link=models.URLField(max_length=100,default=None)
     
 class Logline(models.Model):
-    timestamp=models.DateTimeField('Logs reporting time')
-    pluin_app=models.ForeignKey(PluginApp, related_name='Logs')
-    log_text=models.TextField()
-    importance=models.CharField(max_length=50,
-                           help_text=_T("Importance of the logline") )
-    slibling=models.ManyToManyField("self")
-    previous_logs=models.ManyToManyField("self", related_name="next")
-    next_logs=models.ManyToManyField("self", related_name="previous")
+    testrun=models.ForeignKey(TestRun, related_name="Logs",default=None) 
+    log_text=models.TextField(default=None)
 
-
-    @abc.abstractmethod
-    def get_log_key(self):
-        pass
-
-    @abc.abstractmethod
-    def get_log_value(self):
-        pass
-   
-    @abc.abstractmethod
-    def get_instance(self):
-        pass
-
-
-
+        
